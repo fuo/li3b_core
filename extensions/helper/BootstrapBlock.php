@@ -35,97 +35,97 @@ use lithium\net\http\Router;
 
 class BootstrapBlock extends \lithium\template\Helper {
 
-	/**
-	 * This renders a a block.
-	 *
-	 *
-	 * @param string $position The block position identifier
-	 * @param array $options
-	 * @return string HTML code for the menu
-	 */
-	public function render($position=null, $data=array(), $options=array()) {
-		$defaults = array(
-			//'cache' => '+1 day'
-			'cache' => false,
-			'wrapperId' => false,
-		);
-		$options += $defaults;
+    /**
+     * This renders a a block.
+     *
+     *
+     * @param string $position The block position identifier
+     * @param array $options
+     * @return string HTML code for the menu
+     */
+    public function render($position=null, $data=array(), $options=array()) {
+        $defaults = array(
+            //'cache' => '+1 day'
+            'cache' => false,
+            'wrapperId' => false,
+        );
+        $options += $defaults;
 
-		if(empty($position) || !is_string($position)) {
-			return '';
-		}
+        if(empty($position) || !is_string($position)) {
+            return '';
+        }
 
-		// set the cache key for the menu
-		$cache_key = 'li3b_blocks.' . $position;
-		$blocks = false;
+        // set the cache key for the menu
+        $cache_key = 'li3b_blocks.' . $position;
+        $blocks = false;
 
-		// if told to use the block content from cache
-		if(!empty($options['cache'])) {
-			$blocks = Cache::read('default', $cache_key);
-		}
+        // if told to use the block content from cache
+        if(!empty($options['cache'])) {
+            $blocks = Cache::read('default', $cache_key);
+        }
 
-		// if the content hasn't been set in cache or it was empty for some reason, get a fresh copy of its data
-		if(empty($blocks)) {
-			$blocks = Block::staticBlock($position);
-		}
+        // if the content hasn't been set in cache or it was empty for some reason, get a fresh copy of its data
+        if(empty($blocks)) {
+            $blocks = Block::staticBlock($position);
+        }
 
-		// if using cache, write the menu data to the cache key
-		if(!empty($options['cache'])) {
-			Cache::write('default', $cache_key, $blocks, $options['cache']);
-		}
+        // if using cache, write the menu data to the cache key
+        if(!empty($options['cache'])) {
+            Cache::write('default', $cache_key, $blocks, $options['cache']);
+        }
 
-		$string = "\n";
-		if($options['wrapperId']) {
-			$string .= '<div id="' . $options['wrapperId'] . '">';
-		}
-		foreach($blocks as $block) {
-			if(isset($block['options']['wrapperId'])) {
-				$string .= "\n\t" . '<div id="' . $block['options']['wrapperId'] . '">';
-			}
+        $string = "\n";
+        if($options['wrapperId']) {
+            $string .= '<div id="' . $options['wrapperId'] . '">';
+        }
+        foreach($blocks as $block) {
+            if(isset($block['options']['wrapperId'])) {
+                $string .= "\n\t" . '<div id="' . $block['options']['wrapperId'] . '">';
+            }
 
-			// Blocks can be very simple and contain all the content in the array.
-			if(is_string($block['content'])) {
-			$string .= "\n\t\t" . $block['content'];
-			}
+            // Blocks can be very simple and contain all the content in the array.
+            if(is_string($block['content'])) {
+            $string .= "\n\t\t" . $block['content'];
+            }
 
-			// Or, they can point to an element view template. These are essentially like elements, only they can have layout templates as well.
-			if(is_array($block['content'])) {
-				if(isset($block['content']['template'])) {
-					$elementOptions = isset($block['content']['options']) ? $block['content']['options']:array();
-					if(isset($block['content']['library'])) {
-						$elementOptions['library'] = $block['content']['library'];
-					}
-					$elementOptions['layout'] = isset($block['content']['layout']) ? $block['content']['layout']:'blank';
-					$elementOptions['template'] = $block['content']['template'];
+            // Or, they can point to an element view template. These are essentially like elements, only they can have layout templates as well.
+            if(is_array($block['content'])) {
+                if(isset($block['content']['template'])) {
+                    $elementOptions = isset($block['content']['options']) ? $block['content']['options']:array();
+                    if(isset($block['content']['library'])) {
+                        $elementOptions['library'] = $block['content']['library'];
+                    }
+                    $elementOptions['layout'] = isset($block['content']['layout']) ? $block['content']['layout']:'blank';
+                    $elementOptions['template'] = $block['content']['template'];
 
-					$appConfig = Libraries::get(true);
-					$paths = array(
-						'layout' => array(
-							'{:library}/views/layouts/{:layout}.{:type}.php',
-							$appConfig['path'] . '/views/layouts/{:layout}.{:type}.php'
-						),
-						'template' => array(
-							$appConfig['path'] . '/views/_libraries/' . $elementOptions['library'] . '/blocks/{:template}.{:type}.php',
-							'{:library}/views/blocks/{:template}.{:type}.php',
-							$appConfig['path'] . '/views/blocks/{:template}.{:type}.php'
-						)
-					);
+                    $appConfig = Libraries::get(true);
+                    $paths = array(
+                        'layout' => array(
+                            '{:library}/views/layouts/{:layout}.{:type}.php',
+                            $appConfig['path'] . '/views/layouts/{:layout}.{:type}.php'
+                        ),
+                        'template' => array(
+                            $appConfig['path'] . '/views/_libraries/' . $elementOptions['library'] . '/blocks/{:template}.{:type}.php',
+                            '{:library}/views/blocks/{:template}.{:type}.php',
+                            $appConfig['path'] . '/views/blocks/{:template}.{:type}.php'
+                        )
+                    );
 
-					$View = new View(array('paths' => $paths));
-					$string .= $View->render('all', $data, $elementOptions);
-				}
-			}
+                    $View = new View(array('paths' => $paths));
+                    $string .= $View->render('all', $data, $elementOptions);
+                }
+            }
 
-			if(isset($block['options']['wrapperId'])) {
-				$string .= "\n\t" . '</div>';
-			}
-		}
-		if($options['wrapperId']) {
-			$string .= '</div>';
-		}
-		$string .= "\n";
+            if(isset($block['options']['wrapperId'])) {
+                $string .= "\n\t" . '</div>';
+            }
+        }
+        if($options['wrapperId']) {
+            $string .= '</div>';
+        }
+        $string .= "\n";
 
-		return $string;
-	}
+        return $string;
+    }
 }
 ?>

@@ -65,17 +65,17 @@ Environment::set('test', array('locale' => 'en', 'locales' => array('en' => 'Eng
  *     `Php` or `Gettext` adapter which handle this internally.
  */
 Catalog::config(array(
-	'runtime' => array(
-		'adapter' => 'Memory'
-	),
-	// 'app' => array(
-	// 	'adapter' => 'Gettext',
-	// 	'path' => Libraries::get(true, 'resources') . '/g11n'
-	// ),
-	'lithium' => array(
-		'adapter' => 'Php',
-		'path' => LITHIUM_LIBRARY_PATH . '/lithium/g11n/resources/php'
-	)
+    'runtime' => array(
+        'adapter' => 'Memory'
+    ),
+    // 'app' => array(
+    //  'adapter' => 'Gettext',
+    //  'path' => Libraries::get(true, 'resources') . '/g11n'
+    // ),
+    'lithium' => array(
+        'adapter' => 'Php',
+        'path' => LITHIUM_LIBRARY_PATH . '/lithium/g11n/resources/php'
+    )
 ) + Catalog::config());
 
 /**
@@ -106,9 +106,9 @@ Catalog::config(array(
  * enables translation functions, i.e. `<?=$t("Translated content"); ?>`.
  */
 Media::applyFilter('_handle', function($self, $params, $chain) {
-	$params['handler'] += array('outputFilters' => array());
-	$params['handler']['outputFilters'] += Message::aliases();
-	return $chain->next($self, $params, $chain);
+    $params['handler'] += array('outputFilters' => array());
+    $params['handler']['outputFilters'] += Message::aliases();
+    return $chain->next($self, $params, $chain);
 });
 
 /**
@@ -116,7 +116,7 @@ Media::applyFilter('_handle', function($self, $params, $chain) {
  * by specifying them manually or retrieving them with the `Catalog` class.
  */
 foreach (array('phone', 'postalCode', 'ssn') as $name) {
-	Validator::add($name, Catalog::read(true, "validation.{$name}", 'en_US'));
+    Validator::add($name, Catalog::read(true, "validation.{$name}", 'en_US'));
 }
 
 /**
@@ -125,12 +125,12 @@ foreach (array('phone', 'postalCode', 'ssn') as $name) {
  * by the client.
  */
 $setLocale = function($self, $params, $chain) {
-	if (!$params['request']->locale()) {
-		$params['request']->locale(Locale::preferred($params['request']));
-	}
-	Environment::set(true, array('locale' => $params['request']->locale()));
+    if (!$params['request']->locale()) {
+        $params['request']->locale(Locale::preferred($params['request']));
+    }
+    Environment::set(true, array('locale' => $params['request']->locale()));
 
-	return $chain->next($self, $params, $chain);
+    return $chain->next($self, $params, $chain);
 };
 ActionDispatcher::applyFilter('_callable', $setLocale);
 ConsoleDispatcher::applyFilter('_callable', $setLocale);

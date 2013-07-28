@@ -22,16 +22,16 @@ use lithium\action\Dispatcher;
 
 // Set the evironment
 if($_SERVER['HTTP_HOST'] == 'li3bootstrap.dev.local' || $_SERVER['HTTP_HOST'] == 'li3bootstrap.local' || $_SERVER['HTTP_HOST'] == 'localhost') {
-	Environment::set('development');
+    Environment::set('development');
 }
 
 /**
  * Dispatcher rules to rewrite admin actions.
  */
 Dispatcher::config(array(
-	'rules' => array(
-		'admin' => array('action' => 'admin_{:action}')
-	)
+    'rules' => array(
+        'admin' => array('action' => 'admin_{:action}')
+    )
 ));
 
 /**
@@ -48,10 +48,10 @@ Dispatcher::config(array(
  * no functionality. Static pages are as far as it goes.
  */
 Router::connect("/admin", array('admin' => true, 'controller' => 'pages', 'action' => 'view', 'args' => array()), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect("/admin/page/{:args}", array('admin' => true, 'controller' => 'pages', 'action' => 'view', 'args' => array()), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 
 /**
@@ -77,22 +77,22 @@ Router::connect("/admin/page/{:args}", array('admin' => true, 'controller' => 'p
  * are kept in purely for the sake of having shorter routes which may look nicer to and end user.
  */
 Router::connect('/admin/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}/sort-{:sort}/{:args}', array('admin' => true), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect('/admin/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}', array('admin' => true), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect('/admin/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/sort-{:sort}', array('admin' => true), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect('/admin/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/{:args}', array('admin' => true), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect('/admin/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}', array('admin' => true), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect("/admin/plugin/{:library}/{:controller}/{:action}/{:args}", array('admin' => true, 'action' => 'index', 'args' => array()), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 
 /**
@@ -104,7 +104,7 @@ Router::connect("/admin/plugin/{:library}/{:controller}/{:action}/{:args}", arra
  * ex. /admin/li3b_users/pages/view/home (the "home" page works for both URLs of course)
  */
 Router::connect("/admin/plugin/{:library}", array('admin' => true, 'controller' => 'pages', 'action' => 'view', 'args' => array()), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 
 /**
@@ -115,22 +115,22 @@ Router::connect("/admin/plugin/{:library}", array('admin' => true, 'controller' 
  * NOTE: You will need an admin layout template in your main app's views directory (this may change in the future).
  */
 Router::connect('/admin/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}/sort-{:sort}/{:args}', array('admin' => true), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect('/admin/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}', array('admin' => true), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect('/admin/{:controller}/{:action}/page-{:page:[0-9]+}/sort-{:sort}', array('admin' => true), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect('/admin/{:controller}/{:action}/page-{:page:[0-9]+}/{:args}', array('admin' => true), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect('/admin/{:controller}/{:action}/page-{:page:[0-9]+}', array('admin' => true), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 Router::connect("/admin/{:controller}/{:action}/{:args}", array('admin' => true, 'action' => 'index', 'args' => array()), array('persist' => array(
-	'controller', 'admin'
+    'controller', 'admin'
 )));
 
 
@@ -144,22 +144,22 @@ Router::connect("/admin/{:controller}/{:action}/{:args}", array('admin' => true,
  * It also does not cover controllers in the base application. Note the "plugin" prefix.
  */
 Router::connect('/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}/sort-{:sort}/{:args}', array('action' => 'index'), array('persist' => array(
-	'controller', 'library'
+    'controller', 'library'
 )));
 Router::connect('/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/limit-{:limit:[0-9]+}', array('action' => 'index'), array('persist' => array(
-	'controller', 'library'
+    'controller', 'library'
 )));
 Router::connect('/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/sort-{:sort}', array('action' => 'index'), array('persist' => array(
-	'controller', 'library'
+    'controller', 'library'
 )));
 Router::connect('/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}/{:args}', array('action' => 'index'), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect('/plugin/{:library}/{:controller}/{:action}/page-{:page:[0-9]+}', array('action' => 'index'), array('persist' => array(
-	'controller', 'admin', 'library'
+    'controller', 'admin', 'library'
 )));
 Router::connect("/plugin/{:library}/{:controller}/{:action}/{:args}", array('action' => 'index', 'args' => array()), array('persist' => array(
-	'controller', 'library'
+    'controller', 'library'
 )));
 
 /**
@@ -180,7 +180,7 @@ Router::connect("/page/{:args}", array('library' => 'li3b_core', 'controller' =>
  * [http://path/to/app/test](/test) to run tests.
  */
 if (!Environment::is('production')) {
-	Router::connect('/test/{:args}', array('controller' => 'lithium\test\Controller'));
-	Router::connect('/test', array('controller' => 'lithium\test\Controller'));
+    Router::connect('/test/{:args}', array('controller' => 'lithium\test\Controller'));
+    Router::connect('/test', array('controller' => 'lithium\test\Controller'));
 }
 ?>

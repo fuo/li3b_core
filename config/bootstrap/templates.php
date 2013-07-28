@@ -54,127 +54,127 @@ use lithium\core\Libraries;
 
 Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
 
-	//var_dump($params['params']);
-	//exit();
+    //var_dump($params['params']);
+    //exit();
 
-	if(isset($params['params']['library'])) {
-		// Instead of using LITHIUM_APP_PATH,for future compatibility.
-		$defaultAppConfig = Libraries::get(true);
-		$appPath = $defaultAppConfig['path'];
+    if(isset($params['params']['library'])) {
+        // Instead of using LITHIUM_APP_PATH,for future compatibility.
+        $defaultAppConfig = Libraries::get(true);
+        $appPath = $defaultAppConfig['path'];
 
-		$libConfig = Libraries::get($params['params']['library']);
+        $libConfig = Libraries::get($params['params']['library']);
 
-		/**
-		 * LAYOUTS AND TEMPLATES
-		 * Note the path ordering for how templates override others.
-		 * First, your overrides and then the default render paths for a library.
-		 * Second to last, it tries to grab what it can from the main application.
-		 * Last (worst case) it tries to use what's in Lithium Bootstrap.
-		 *
-		 * The last scenario is rare, if using a "default" layout, for example,
-		 * it likely exists in the main application already. If a library is
-		 * specifcially designed for Lithium Bootstrap and wishes to use
-		 * templates within li3b_core before looking in the main application,
-		 * they should be added with the proper configuration settings.
-		 */
-		$paths['layout'] = array(
-			$appPath . '/views/_libraries/' . $params['params']['library'] . '/layouts/{:layout}.{:type}.php',
-			'{:library}/views/layouts/{:layout}.{:type}.php',
-			$appPath . '/views/layouts/{:layout}.{:type}.php',
-			// Last, look in the li3b_core library...
-			$appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php'
-		);
-		$paths['template'] = array(
-			$appPath . '/views/_libraries/' . $params['params']['library'] . '/{:controller}/{:template}.{:type}.php',
-			'{:library}/views/{:controller}/{:template}.{:type}.php',
-			$appPath . '/views/{:controller}/{:template}.{:type}.php',
-			// Last ditch effort to find the template...Note: Lithium Bootstrap takes a back seat to the main app.
-			$appPath . '/libraries/li3b_core/views/{:controller}/{:layout}.{:type}.php'
-		);
+        /**
+         * LAYOUTS AND TEMPLATES
+         * Note the path ordering for how templates override others.
+         * First, your overrides and then the default render paths for a library.
+         * Second to last, it tries to grab what it can from the main application.
+         * Last (worst case) it tries to use what's in Lithium Bootstrap.
+         *
+         * The last scenario is rare, if using a "default" layout, for example,
+         * it likely exists in the main application already. If a library is
+         * specifcially designed for Lithium Bootstrap and wishes to use
+         * templates within li3b_core before looking in the main application,
+         * they should be added with the proper configuration settings.
+         */
+        $paths['layout'] = array(
+            $appPath . '/views/_libraries/' . $params['params']['library'] . '/layouts/{:layout}.{:type}.php',
+            '{:library}/views/layouts/{:layout}.{:type}.php',
+            $appPath . '/views/layouts/{:layout}.{:type}.php',
+            // Last, look in the li3b_core library...
+            $appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php'
+        );
+        $paths['template'] = array(
+            $appPath . '/views/_libraries/' . $params['params']['library'] . '/{:controller}/{:template}.{:type}.php',
+            '{:library}/views/{:controller}/{:template}.{:type}.php',
+            $appPath . '/views/{:controller}/{:template}.{:type}.php',
+            // Last ditch effort to find the template...Note: Lithium Bootstrap takes a back seat to the main app.
+            $appPath . '/libraries/li3b_core/views/{:controller}/{:layout}.{:type}.php'
+        );
 
-		/*
-		 * Condition #4 here. This will prefer Lithium Bootstrap's core layouts.
-		 * Libraries added with this configuration option were designed specifically
-		 * for use with Lithium Bootstrap and wish to use it's default design.
-		 *
-		 * Of course, there is still template fallback support in case the user
-		 * has changed up their copy of Lithium Bootstrap...But the library is
-		 * now putting the priority on the Lithium Bootstrap layouts, unless
-		 * overridden by templates in the _libraries directory of the main app.
-		 *
-		 * There is currently no need to do the same with templates since the
-		 * li3b_core library has so few view templates...And they don't even make
-		 * sense to share for any other purpose whereas layouts are definitely
-		 * something another action can take advantage of.
-		 */
-		if(isset($libConfig['useBootstrapLayout']) && (bool)$libConfig['useBootstrapLayout'] === true) {
-			$paths['layout'] = array(
-				$appPath . '/views/_libraries/' . $params['params']['library'] . '/layouts/{:layout}.{:type}.php',
-				$appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php',
-				'{:library}/views/layouts/{:layout}.{:type}.php',
-				$appPath . '/views/layouts/{:layout}.{:type}.php'
-			);
-		}
+        /*
+         * Condition #4 here. This will prefer Lithium Bootstrap's core layouts.
+         * Libraries added with this configuration option were designed specifically
+         * for use with Lithium Bootstrap and wish to use it's default design.
+         *
+         * Of course, there is still template fallback support in case the user
+         * has changed up their copy of Lithium Bootstrap...But the library is
+         * now putting the priority on the Lithium Bootstrap layouts, unless
+         * overridden by templates in the _libraries directory of the main app.
+         *
+         * There is currently no need to do the same with templates since the
+         * li3b_core library has so few view templates...And they don't even make
+         * sense to share for any other purpose whereas layouts are definitely
+         * something another action can take advantage of.
+         */
+        if(isset($libConfig['useBootstrapLayout']) && (bool)$libConfig['useBootstrapLayout'] === true) {
+            $paths['layout'] = array(
+                $appPath . '/views/_libraries/' . $params['params']['library'] . '/layouts/{:layout}.{:type}.php',
+                $appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php',
+                '{:library}/views/layouts/{:layout}.{:type}.php',
+                $appPath . '/views/layouts/{:layout}.{:type}.php'
+            );
+        }
 
-		/**
-		 * ELEMENTS
-		 * This will allow the main application to still render it's elements
-		 * even though the View() class may be dealing with one of this library's
-		 * controllers, which would normally suggest the element comes from the library
-		 * Again, note the ordering here for how things override others.
-		 * 1. Your overrides are considered first.
-		 * 2. Elements that may come with the library are used when a library key is used.
-		 * 3. The main application is checked for the element templates (this functions as normal out of the box Lithium).
-		 * 4. Lithium Bootstrap elements. Last ditch effort to find the element.
-		 *    Note: When you wish to use an element from Lithium Bootstrap, you should
-		 *    pass a library key to be certain it is used. Otherwise, if you have an
-		 *    element in your main application by the same name as one from Lithium
-		 *    Bootstrap, you could be using that instead when you did not intend to.
-		 *    All of the elements rendered from li3b_core pass a library key and
-		 *    your plugins, wishing to use core li3b elements, should do the same.
-		 */
-		$paths['element'] = array(
-			$appPath . '/views/_libraries/' . $params['params']['library'] . '/elements/{:template}.{:type}.php',
-			'{:library}/views/elements/{:template}.{:type}.php',
-			$appPath . '/views/elements/{:template}.{:type}.php',
-			$appPath . '/libraries/li3b_core/views/elements/{:template}.{:type}.php'
-		);
+        /**
+         * ELEMENTS
+         * This will allow the main application to still render it's elements
+         * even though the View() class may be dealing with one of this library's
+         * controllers, which would normally suggest the element comes from the library
+         * Again, note the ordering here for how things override others.
+         * 1. Your overrides are considered first.
+         * 2. Elements that may come with the library are used when a library key is used.
+         * 3. The main application is checked for the element templates (this functions as normal out of the box Lithium).
+         * 4. Lithium Bootstrap elements. Last ditch effort to find the element.
+         *    Note: When you wish to use an element from Lithium Bootstrap, you should
+         *    pass a library key to be certain it is used. Otherwise, if you have an
+         *    element in your main application by the same name as one from Lithium
+         *    Bootstrap, you could be using that instead when you did not intend to.
+         *    All of the elements rendered from li3b_core pass a library key and
+         *    your plugins, wishing to use core li3b elements, should do the same.
+         */
+        $paths['element'] = array(
+            $appPath . '/views/_libraries/' . $params['params']['library'] . '/elements/{:template}.{:type}.php',
+            '{:library}/views/elements/{:template}.{:type}.php',
+            $appPath . '/views/elements/{:template}.{:type}.php',
+            $appPath . '/libraries/li3b_core/views/elements/{:template}.{:type}.php'
+        );
 
-		$params['options']['render']['paths'] = $paths;
+        $params['options']['render']['paths'] = $paths;
 
-	}
+    }
 
-	/**
-	 * Allow the main application to use Lithium Bootstrap's admin layout template and elements.
-	 * This helps to speed up development without the need to always create libraries for everything.
-	 */
-	if(isset($params['params']['admin']) && $params['params']['admin'] === true && !isset($params['params']['library'])) {
-		$defaultAppConfig = Libraries::get(true);
-		$appPath = $defaultAppConfig['path'];
+    /**
+     * Allow the main application to use Lithium Bootstrap's admin layout template and elements.
+     * This helps to speed up development without the need to always create libraries for everything.
+     */
+    if(isset($params['params']['admin']) && $params['params']['admin'] === true && !isset($params['params']['library'])) {
+        $defaultAppConfig = Libraries::get(true);
+        $appPath = $defaultAppConfig['path'];
 
-		$paths['layout'] = array(
-			$appPath . '/views/layouts/{:layout}.{:type}.php',
-			// Last, look in the li3b_core library...
-			$appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php'
-		);
+        $paths['layout'] = array(
+            $appPath . '/views/layouts/{:layout}.{:type}.php',
+            // Last, look in the li3b_core library...
+            $appPath . '/libraries/li3b_core/views/layouts/{:layout}.{:type}.php'
+        );
 
-		$paths['template'] = array(
-			$appPath . '/views/{:controller}/{:template}.{:type}.php',
-			// li3b_core has no controller other than pages. This basically ensures "/admin" still works.
-			$appPath . '/libraries/li3b_core/views/{:controller}/{:template}.{:type}.php'
-		);
+        $paths['template'] = array(
+            $appPath . '/views/{:controller}/{:template}.{:type}.php',
+            // li3b_core has no controller other than pages. This basically ensures "/admin" still works.
+            $appPath . '/libraries/li3b_core/views/{:controller}/{:template}.{:type}.php'
+        );
 
-		// Allow admin elements to be overridden for the main app looking to use the admin templates.
-		// There is the top nav element as well as the footer...But if they aren't being overwritten,
-		// simply use the templates that exist in li3b_core.
-		$paths['element'] = array(
-			$appPath . '/views/elements/{:template}.{:type}.php',
-			$appPath . '/libraries/li3b_core/views/elements/{:template}.{:type}.php'
-		);
+        // Allow admin elements to be overridden for the main app looking to use the admin templates.
+        // There is the top nav element as well as the footer...But if they aren't being overwritten,
+        // simply use the templates that exist in li3b_core.
+        $paths['element'] = array(
+            $appPath . '/views/elements/{:template}.{:type}.php',
+            $appPath . '/libraries/li3b_core/views/elements/{:template}.{:type}.php'
+        );
 
-		$params['options']['render']['paths'] = $paths;
-	}
+        $params['options']['render']['paths'] = $paths;
+    }
 
-	return $chain->next($self, $params, $chain);
+    return $chain->next($self, $params, $chain);
 });
 ?>

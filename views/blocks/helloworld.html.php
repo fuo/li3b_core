@@ -7,7 +7,7 @@
 <p>Hello world from an element.<br />
 <?php
 if(isset($foo)) {
-	echo '...and I have $foo as ' . $foo . ' because you can pass variables to me.';
+    echo '...and I have $foo as ' . $foo . ' because you can pass variables to me.';
 }
 ?>
 </p>

@@ -23,7 +23,7 @@ pre {
 */
 code {
     overflow: auto;
-	white-space: pre !important;
+    white-space: pre !important;
 }
 
 /**
@@ -50,5 +50,5 @@ pre ::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 pre ::-webkit-scrollbar-thumb:window-inactive {
-	background: rgba(155,155,155,0.4);
+    background: rgba(155,155,155,0.4);
 }

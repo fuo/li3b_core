@@ -13,7 +13,7 @@
 use lithium\storage\Session;
 use lithium\core\Libraries;
 
-/** 
+/**
  * This ensures any other library (loaded first) applies its config
  * and it remains. Running Session::config(array(...)) again will
  * overwrite the original configuration.
@@ -22,25 +22,25 @@ use lithium\core\Libraries;
  * confiuration. This prevents each library from needing to set
  * a session configuration and gives a default that each library
  * can assume will be available.
- * 
+ *
  * Yes, it is a good idea for your libraries with special session
  * needs to use uniquely named configurations. It is also wise
  * to run the same type of append method as you see below in order
  * to ensure you are not overwriting any session configurations
  * set by other libraries that may have been loaded before yours.
- */ 
+ */
 $config = Session::config();
 $config += array(
-	'cookie' => array('adapter' => 'Cookie'),
-	'default' => array('adapter' => 'Php'),
-	//'default' => array('adapter' => 'Model', 'model' => 'app\models\Session'),
-	'flash_message' => array('adapter' => 'Php')
+    'cookie' => array('adapter' => 'Cookie'),
+    'default' => array('adapter' => 'Php'),
+    //'default' => array('adapter' => 'Model', 'model' => 'app\models\Session'),
+    'flash_message' => array('adapter' => 'Php')
 );
 
 // Allow the session configuration to be set in the Libraries::add() call for li3b_core.
 $li3bCoreConfig = Libraries::get('li3b_core');
 if(isset($li3bCoreConfig['session'])) {
-	$config = $li3bCoreConfig['session'];
+    $config = $li3bCoreConfig['session'];
 }
 
 Session::config($config);

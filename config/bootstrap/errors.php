@@ -13,41 +13,41 @@ use lithium\core\Environment;
 use lithium\core\Libraries;
 
 ErrorHandler::apply('lithium\action\Dispatcher::run', array(), function($info, $params) {
-	$response = new Response(array(
-		'request' => $params['request'],
-		'status' => $info['exception']->getCode()
-	));
-	
-	// Production error templates should follow the design of the site.
-	$error_layout = 'default';
-	$error_template = 'production';
-	
-	$appCfg = Libraries::get();
-	$defaultApp = false;
-	$defaultLibrary = null;
-	foreach($appCfg as $k => $library) {
-		if($library['default'] === true) {
-			$defaultApp = $library;
-			$defaultLibrary = $k;
-		}
-	}
-	
-	// Development error templates can look different.
-	if(Environment::is('development')) {
-		$error_layout = file_exists($defaultApp['path'] . '/views/layouts/error.html.php') ? 'error':$error_layout;
-		$error_template = 'development';
-	}
-	
-	// If the error templates don't exist use li3b_core's.
-	$error_library = (file_exists($defaultApp['path'] . '/views/layouts/' . $error_layout . '.html.php') && file_exists($defaultApp['path'] . '/views/_errors/' . $error_template . '.html.php')) ? $defaultLibrary:'li3b_core';
-	
-	Media::render($response, compact('info', 'params'), array(
-		'library' => $error_library,
-		'controller' => '_errors',
-		'template' => $error_template,
-		'layout' => $error_layout,
-		'request' => $params['request']
-	));
-	return $response;
+    $response = new Response(array(
+        'request' => $params['request'],
+        'status' => $info['exception']->getCode()
+    ));
+
+    // Production error templates should follow the design of the site.
+    $error_layout = 'default';
+    $error_template = 'production';
+
+    $appCfg = Libraries::get();
+    $defaultApp = false;
+    $defaultLibrary = null;
+    foreach($appCfg as $k => $library) {
+        if($library['default'] === true) {
+            $defaultApp = $library;
+            $defaultLibrary = $k;
+        }
+    }
+
+    // Development error templates can look different.
+    if(Environment::is('development')) {
+        $error_layout = file_exists($defaultApp['path'] . '/views/layouts/error.html.php') ? 'error':$error_layout;
+        $error_template = 'development';
+    }
+
+    // If the error templates don't exist use li3b_core's.
+    $error_library = (file_exists($defaultApp['path'] . '/views/layouts/' . $error_layout . '.html.php') && file_exists($defaultApp['path'] . '/views/_errors/' . $error_template . '.html.php')) ? $defaultLibrary:'li3b_core';
+
+    Media::render($response, compact('info', 'params'), array(
+        'library' => $error_library,
+        'controller' => '_errors',
+        'template' => $error_template,
+        'layout' => $error_layout,
+        'request' => $params['request']
+    ));
+    return $response;
 });
 ?>

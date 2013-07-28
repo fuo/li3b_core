@@ -10,26 +10,26 @@ use li3b_core\models\BootstrapMenu as Menu;
 
 /*
 Menu::applyFilter('staticMenu',  function($self, $params, $chain) {
-	if($params['name'] == 'admin') {
-		$self::$staticMenus['admin']['someKeyThatDeterminesMenuItemPositionOrderedAlphabetically'] = array(
-			'title' => 'Menu Dropdown Title <b class="caret"></b>',
-			'url' => '#',
-			'activeIf' => array('controller' => 'example'),
-			'options' => array('escape' => false),
-			'subItems' => array(
-				array(
-					'title' => 'List All',
-					'url' => array('admin' => true, 'controller' => 'example', 'action' => 'index')
-				),
-				array(
-					'title' => 'Create New',
-					'url' => array('admin' => true, 'controller' => 'example', 'action' => 'create')
-				)
-			)
-		);
-	}
-	
-	return $chain->next($self, $params, $chain);
+    if($params['name'] == 'admin') {
+        $self::$staticMenus['admin']['someKeyThatDeterminesMenuItemPositionOrderedAlphabetically'] = array(
+            'title' => 'Menu Dropdown Title <b class="caret"></b>',
+            'url' => '#',
+            'activeIf' => array('controller' => 'example'),
+            'options' => array('escape' => false),
+            'subItems' => array(
+                array(
+                    'title' => 'List All',
+                    'url' => array('admin' => true, 'controller' => 'example', 'action' => 'index')
+                ),
+                array(
+                    'title' => 'Create New',
+                    'url' => array('admin' => true, 'controller' => 'example', 'action' => 'create')
+                )
+            )
+        );
+    }
+
+    return $chain->next($self, $params, $chain);
 });
 */
 ?>

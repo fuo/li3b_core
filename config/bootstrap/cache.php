@@ -16,7 +16,7 @@ use lithium\action\Dispatcher;
 use lithium\storage\cache\adapter\Apc;
 
 if (PHP_SAPI === 'cli') {
-	return;
+    return;
 }
 
 /**
@@ -26,7 +26,7 @@ if (PHP_SAPI === 'cli') {
 $cachePath = Libraries::get(true, 'resources') . '/tmp/cache';
 
 if (!($apcEnabled = Apc::enabled()) && !is_writable($cachePath)) {
-	return;
+    return;
 }
 
 /**
@@ -37,7 +37,7 @@ if (!($apcEnabled = Apc::enabled()) && !is_writable($cachePath)) {
 $default = array('adapter' => 'File', 'strategies' => array('Serializer'));
 
 if ($apcEnabled) {
-	$default = array('adapter' => 'Apc');
+    $default = array('adapter' => 'Apc');
 }
 Cache::config(compact('default'));
 
@@ -45,17 +45,17 @@ Cache::config(compact('default'));
  * Caches paths for auto-loaded and service-located classes.
  */
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
-	$key = md5(LITHIUM_APP_PATH) . '.core.libraries';
+    $key = md5(LITHIUM_APP_PATH) . '.core.libraries';
 
-	if ($cache = Cache::read('default', $key)) {
-		$cache = (array) $cache + Libraries::cache();
-		Libraries::cache($cache);
-	}
-	$result = $chain->next($self, $params, $chain);
+    if ($cache = Cache::read('default', $key)) {
+        $cache = (array) $cache + Libraries::cache();
+        Libraries::cache($cache);
+    }
+    $result = $chain->next($self, $params, $chain);
 
-	if ($cache != Libraries::cache()) {
-		Cache::write('default', $key, Libraries::cache(), '+1 day');
-	}
-	return $result;
+    if ($cache != Libraries::cache()) {
+        Cache::write('default', $key, Libraries::cache(), '+1 day');
+    }
+    return $result;
 });
 ?>
