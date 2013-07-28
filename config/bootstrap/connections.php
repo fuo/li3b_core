@@ -42,34 +42,41 @@ use lithium\data\Connections;
  * used with any database, but MongoDB is the preferred database.
  */
 Connections::add(
-    'li3b_mongodb', array(
-        'production' => array(
-            'type' => 'MongoDb',
-            'host' => 'localhost',
-            'database' => 'li3bootstrap'
-        ),
-        'development' => array(
-            'type' => 'MongoDb',
-            'host' => 'localhost',
-            'database' => 'li3bootstrap_dev'
-        ),
-        'test' => array(
-            'type' => 'database',
-            'adapter' => 'MongoDb',
-            'database' => 'li3bootstrap_test',
-            'host' => 'localhost'
-        )
-    )
+  'default', array(
+       'type' => 'MongoDb',
+       'host' => 'localhost',
+       'database' => 'my_app'
+  )
 );
-
+// Add another connection for li3_bootstrap
+Connections::add(
+	'li3b_mongodb', array(
+		'production' => array(
+			'type' => 'MongoDb',
+			'host' => 'localhost',
+			'database' => 'li3bootstrap'
+		),
+		'development' => array(
+			'type' => 'MongoDb',
+			'host' => 'localhost',
+			'database' => 'li3bootstrap_dev'
+		),
+		'test' => array(
+			'type' => 'database',
+			'adapter' => 'MongoDb',
+			'database' => 'li3bootstrap_test',
+			'host' => 'localhost'
+		)
+	)
+);
 $appConfig =  Libraries::get(true);
 $connd = $appConfig['path'] . '/config/bootstrap/connections/*.php';
 $conndFiles = glob($connd);
 if(!empty($conndFiles)) {
-    asort($conndFiles);
+	asort($conndFiles);
 }
 
 foreach ($conndFiles as $filename) {
-    include $filename;
+	include $filename;
 }
 ?>
